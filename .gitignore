@@ -3,4 +3,4 @@ node_modules
 bower_packages
 
 # Build artifact
-dist
+www

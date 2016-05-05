@@ -9,6 +9,7 @@ var browserify = require("browserify");
 var source = require("vinyl-source-stream");
 var runSequence = require('run-sequence');
 var browserSync = require("browser-sync");
+var server = require("gulp-develop-server");
 
 //
 // Configuration
@@ -134,11 +135,19 @@ gulp.task("watch", ["rebuild"], function() {
 });
 
 gulp.task("serve", ["watch"], function() {
+    server.listen( { path: './www/server.js' } );
+});
+
+gulp.task("livereload", ["serve"], function() {
    browserSync.create();
    
    browserSync.init({
-      server: "./www" 
+       proxy: {
+           target: "http://localhost:8080",
+           //ws: true
+       }
    });
    
    gulp.watch(build.output.files.html).on("change", browserSync.reload);
 });
+

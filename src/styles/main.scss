@@ -1,3 +1,125 @@
-h2 {
-    color: red;
+$primary-color: #0091d2;
+
+$text-color: #1E1E20;
+$off-white: #F5F5F5;
+
+$border-color: lighten($text-color, 45%);
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    
+    color: $text-color;
+    background-color: $off-white;
+}
+
+.flex-row-container {
+    display: flex;
+    flex-flow: row;
+}
+
+.flex-column-container {
+    display: flex;
+    flex-flow: column;
+}
+
+.application-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+    @extend .flex-column-container;
+}
+
+.map {
+    flex-grow: 4;
+    flex-basis: 24rem;
+    position: absolute;
+    top: 0;
+    bottom:0;
+    
+    overflow: hidden;
+}
+
+.sidebar {
+    flex-grow: 0.5;
+    flex-basis: 24rem;
+    
+    padding: 0.5rem 1rem;
+    
+    border-top: 1px solid darken($primary-color, 10%);
+    color: $off-white;
+    background-color: $primary-color;
+    
+    @extend .flex-column-container;
+    
+    
+    > div {
+        margin-top: 1rem;
+    }
+    
+    > :first-child {
+        margin-top: 0;
+    }
+    
+    .content {
+        flex-grow: 1;
+    }
+}
+
+.brand {
+    
+    height: 6rem;
+    padding: 1rem;
+    
+    background-color: darken($primary-color, 6%);
+    
+    @extend .flex-row-container;
+    
+    .logo {
+        height: 4rem;
+        flex-basis: 4rem;
+        flex-grow: 0;
+        
+        margin-right: 2rem;
+        
+        border: 1px solid darken($primary-color, 6%);
+    }
+    
+    .name {
+        text-align: center;
+        flex-grow: 1;
+        text-align: left;
+        
+        // Center text vertically
+        @extend .flex-column-container;
+        justify-content: center;
+        
+    }
+    
+    
+}
+
+.credit {
+    text-align: center;
+    padding: 1rem;
+    background-color: darken($primary-color, 6%);
+}
+
+@media(min-width: 700px) {
+    
+    .application-container {
+        flex-direction: row;
+    }
+    
+    .sidebar {
+        border-left: 1px solid darken($primary-color, 6%);
+        border-top: none;
+    }
+    
+    
 }

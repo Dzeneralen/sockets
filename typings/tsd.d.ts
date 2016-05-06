@@ -7,4 +7,6 @@
 /// <reference path="mime/mime.d.ts" />
 /// <reference path="serve-static/serve-static.d.ts" />
 /// <reference path="leaflet/leaflet.d.ts" />
+/// <reference path="redis/redis.d.ts" />
+/// <reference path="promise/promise.d.ts" />
 

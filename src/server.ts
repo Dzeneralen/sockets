@@ -2,61 +2,82 @@
 /// <reference path="../typings/tsd.d.ts" />
 import * as express from "express";
 import * as socketio from "socket.io";
-import RedisClient from "./RedisClient";
-import DataClient from "./DataClient";
+import * as socketioclient from "socket.io-client";
+import * as Request from "request";
+import * as WebSocket from "websocket";
+
+import * as INSocket from "./NobilSocketInterfaces";
+import NobilApplication from "./NobilApplication";
+var Secrets =  require("./secrets.json");
 
 
-function setupRedis() {
+
+function setupDatabase() {
 	// port, host
-	let redisClient = new RedisClient({});
+	let nobilApp = new NobilApplication(Secrets.apiKey);
 	
-	console.log("Trying to read data");
-	let dataClient = new DataClient();
+	let filePath = "C:\\Users\\dzenand\\Documents\\Web\\sockets\\nobil.json";
 	
-	let filePath = "C:\\Users\\dzenand\\Documents\\Web\\sockets\\data\\nobil.json";
-	
-	dataClient.readNOBILDataDump(filePath).then(nobilData => {
+	nobilApp.getDataFileJSON(filePath).then(() => {
 		
-		let parsedData = nobilData.chargerstations.map((cs) => {
-			
-			let createAddress = (street, housenr, city, zip) => {
-				return street + " " + housenr + ", " + zip + " " + city;				
-			};
-			
-			let createPointGeometryString = (pointString: string) => {
-				let point = pointString.replace("(", "[").replace(")", "]");
-				return point;
-			};
-			
-			let info = cs.csmd;
-			
-			return {
-				name: info.name,
-				internationalId: info.International_id,
-				city: info.City,
-				county: info.County,
-				description: info.Description_of_location,
-				address: createAddress(info.Street, info.House_number, info.City, info.Zipcode),
-				owner: info.Owned_by,
-				status: info.Station_status,
-				geometry: createPointGeometryString(info.Position),
-			};
+		nobilApp.parseDataFromJSONToDB(filePath).then(() => {
+			setupWebSocketToNobil(nobilApp);
 		});
 		
-		redisClient.connect().then(didConnect => {
-			if(didConnect) {
-				redisClient.clearAllKeys();
-			}
-			
-			parsedData.forEach(cs => {
-				redisClient.setKey(cs.internationalId, JSON.stringify(cs));				
-			});
-			
-			console.log("All new keys added");
-		}); 
-		
-		
 	});
+}
+
+function setupWebSocketToNobil(nobilApp: NobilApplication) {
+	console.log("Connecting to NOBIL websocket server!");
+	
+	var wsClient = new WebSocket.client();
+
+	wsClient.on('connect', function(connection) {
+		connection.on('error', function(error) {
+			console.log("Connection Error: " + error.toString());
+		});
+		connection.on('close', function() {
+			console.log('echo-protocol Connection Closed');
+		});
+		connection.on('message', function(message) {
+			if (message.type === 'utf8') {
+				
+				let json = JSON.parse(message.utf8Data);
+				
+				if(json.type === "snapshot:init") {
+					let data : INSocket.IStatusInit = json;
+				    nobilApp.parseDataFromInitialStatusNobilWebSocket(data).then(() => {
+						
+						console.log("kick off the client stuff");
+						
+					});
+				}
+				
+				else if(json.type === "status:update") {
+					let data : INSocket.IStatusUpdate = json;
+					nobilApp.updateChargingStationWithLiveUpdate(data);
+				}
+				
+				else if(json.type === "status:raw") {
+					// Do nothing for now
+					// let data: INSocket.IStatusRaw = json;
+				}
+				
+				
+			}
+		});
+		
+		function sendNumber() {
+			if (connection.connected) {
+				var number = Math.round(Math.random() * 0xFFFFFF);
+				connection.sendUTF(number.toString());
+				setTimeout(sendNumber, 1000);
+			}
+		}
+		sendNumber();
+	});
+	
+	wsClient.connect('ws://realtime.nobil.no/api/v1/stream?apikey=' + Secrets.apiKey);
 	
 	
 	
@@ -64,49 +85,41 @@ function setupRedis() {
 
 
 
-setupRedis();
+//setupRedis();
+
+
 
 let port = 8080;
 
 // Setup
 var app = express();
-//var io = socketio.listen(app);
-
-// Serve static content
 app.use(express.static(__dirname));
-app.listen(port);
-console.log(__dirname);
 
 // http routing:
 app.get('/', function (req, res) {
 	res.sendfile(__dirname + "\index.html");
 });
 
-console.log("Server running on port: " + port);
+var server = app.listen(port, () => {
+	console.log("Server running on port: " + port);
+	
+	var io = socketio.listen(server);
 
-/*
-// socket events
-io.sockets.on('connection', function (socket) {
-	
-	socket.emit('toClient', {
-		type: 'status',
-		msg: 'Connection established'
+	let connectedUsers = 0;
+
+	io.on("connection", (socket) => {
+		console.log("user connected");
+		connectedUsers = connectedUsers + 1;
+		io.emit("status:user", { users: connectedUsers });
+		
+		
+		socket.on("disconnect", () => {
+			connectedUsers = connectedUsers - 1;
+			io.emit("status:user", { users: connectedUsers });
+		});
 	});
-	
-	socket.on('toServer', function (data) {
-		
-		// do any required processing with incoming data
-		
-		
-		// send data to others
-		data.type = 'broadcast';
-		socket.broadcast.emit('toClient', data);
-		
-		// sned copy to self
-		data.type = 'cc';
-		socket.emit('toClient', data);
-		
-	});
-	
 });
-*/
+	
+setupDatabase();
+
+

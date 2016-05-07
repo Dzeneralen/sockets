@@ -4,3 +4,6 @@ bower_packages
 
 # Build artifact
 www
+
+# Secrets
+src/secrets.json

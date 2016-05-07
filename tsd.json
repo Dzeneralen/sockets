@@ -9,7 +9,7 @@
       "commit": "73f7bb99692823f1811817f9753a02b57af5305e"
     },
     "node/node.d.ts": {
-      "commit": "02ba1e3e95a3cb503656ca0415e0febc3bf8ba71"
+      "commit": "6052959591c9bc6f8463c58220965c7030ba934d"
     },
     "serve-static/serve-static.d.ts": {
       "commit": "73f7bb99692823f1811817f9753a02b57af5305e"
@@ -31,6 +31,18 @@
     },
     "promise/promise.d.ts": {
       "commit": "02ba1e3e95a3cb503656ca0415e0febc3bf8ba71"
+    },
+    "socket.io-client/socket.io-client.d.ts": {
+      "commit": "6052959591c9bc6f8463c58220965c7030ba934d"
+    },
+    "form-data/form-data.d.ts": {
+      "commit": "6052959591c9bc6f8463c58220965c7030ba934d"
+    },
+    "request/request.d.ts": {
+      "commit": "6052959591c9bc6f8463c58220965c7030ba934d"
+    },
+    "websocket/websocket.d.ts": {
+      "commit": "6052959591c9bc6f8463c58220965c7030ba934d"
     }
   }
 }

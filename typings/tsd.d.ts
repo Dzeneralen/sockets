@@ -9,4 +9,8 @@
 /// <reference path="leaflet/leaflet.d.ts" />
 /// <reference path="redis/redis.d.ts" />
 /// <reference path="promise/promise.d.ts" />
+/// <reference path="socket.io-client/socket.io-client.d.ts" />
+/// <reference path="form-data/form-data.d.ts" />
+/// <reference path="request/request.d.ts" />
+/// <reference path="websocket/websocket.d.ts" />
 

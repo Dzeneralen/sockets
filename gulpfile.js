@@ -46,19 +46,23 @@ var build = {
             // Miscellaneous files to copy
             images: [paths.source + 'images/**/*.{jpg,png}'],
             html: paths.source + "**/*.html",
+            secrets: paths.source + "secrets.json",
+            data: paths.source + "data/**.json",
         }
     },
     output: {
         files: {
             sass: paths.output + "styles",
             html: paths.output,
-            scripts: paths.output + "scripts/site.js"
+            scripts: paths.output + "scripts/site.js",
+            secrets: paths.output,
         },
         dirs: {
             ts: paths.output,
             images: paths.output + 'images',
             styles: paths.output + 'styles',
             scripts: paths.output + 'scripts',
+            data: paths.output + "data",
         }
     },
     // Sjekk denna
@@ -109,7 +113,16 @@ gulp.task("html", function() {
    return gulp.src(build.input.files.html)
         .pipe(gulp.dest(build.output.files.html))
         .on("change", browserSync.reload);
-        
+});
+
+gulp.task("secrets", function() {
+   return gulp.src(build.input.files.secrets)
+    .pipe(gulp.dest(build.output.files.secrets)); 
+});
+
+gulp.task("data", function() {
+   return gulp.src(build.input.files.data)
+    .pipe(gulp.dest(build.output.dirs.data)); 
 });
 
 gulp.task("app", ["typescript"], function() {
@@ -125,7 +138,7 @@ gulp.task("app", ["typescript"], function() {
 })
 
 gulp.task("rebuild", function(cb) {
-    runSequence(["clean"], ["html", "app", "sass"], cb);
+    runSequence(["clean"], ["html", "app", "sass", "secrets", "data"], cb);
 })
 
 gulp.task("watch", ["rebuild"], function() {

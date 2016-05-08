@@ -1,8 +1,14 @@
 import * as React from "react";
 import Brand from "./Brand";
 import Credit from "./Credit";
+import ConnectionStatusDisplay from "./ConnectionStatusDisplay";
 
 class Sidebar extends React.Component<any, any> {
+    
+    constructor() {
+        super();
+        
+    }
     
     render() {
         return (
@@ -10,18 +16,14 @@ class Sidebar extends React.Component<any, any> {
                 <Brand 
                     name="Sockets" 
                     logoAlt="Image" 
-                    logoUrl=""
+                    logoUrl="icon.svg"
                 />
-                
-                <div className="content">
-                content goes heres
-                </div>
-                
                 <Credit 
                     name="Dzenan"
                     year={2016}
-                    href="#"
+                    href="https://github.com/Dzeneralen"
                 />
+                <ConnectionStatusDisplay />
             </div>            
         );
     }

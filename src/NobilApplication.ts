@@ -26,6 +26,7 @@ class NobilApplication {
 
     apiKey: string;
     rClient: RedisClient;
+    io: SocketIO.Server;
     
     static geometrySet = "cs_geometry";
     static liveSet = "cs_live";
@@ -33,7 +34,7 @@ class NobilApplication {
 
     constructor(apiKey: string) {
         this.apiKey = apiKey;
-
+        this.io = null;
         this.rClient = new RedisClient({});
     }
 
@@ -97,6 +98,45 @@ class NobilApplication {
             });
         });
     }
+    
+    setupSockets(io: SocketIO.Server) {
+        
+        this.io = io;
+        
+        let connectedUsers = 0;
+        console.log("Setting up sockets on nobilApp");
+		this.io.on("connection", (socket) => {
+            
+			connectedUsers = connectedUsers + 1;
+			this.io.emit("status:user", { users: connectedUsers });
+			
+			this.getInitialStateForClient().then(state => {
+				socket.emit("status:init", state);
+			});
+			
+			socket.on("disconnect", () => {
+                
+				connectedUsers = connectedUsers - 1;
+				io.emit("status:user", { users: connectedUsers });
+                
+			});
+		});
+    }
+    
+    getInitialStateForClient() {
+        let promise = new Promise<string>((resolve, reject) => {
+            return this.rClient.connect().then(() => {
+                return this.rClient.getMembersForSet(NobilApplication.geometryLiveSet).then(keys => {
+                   return this.rClient.getValuesForKeys<string>(keys).then(jsonStrings => {
+                       let resultingString = "[" + jsonStrings.join(",") + "]";
+                       resolve(resultingString);
+                   }); 
+                });
+            });
+        });
+        
+        return promise;
+    }
 
     parseDataFromInitialStatusNobilWebSocket(data: INSocket.IStatusInit) {
 
@@ -127,7 +167,7 @@ class NobilApplication {
                     this.rClient.addToSet(NobilApplication.liveSet, cs.uuid);
                 });
                 
-                console.log("There are " + chargingStationsWithGeometryAndUpdates.length + " chargingstations with geometry and live updates");
+                console.log("There are " + chargingStationsWithGeometryAndUpdates.length + " chargingstations with geometry and live updates in Norway!");
                 
                 chargingStationsWithGeometryAndUpdates.map(cs => {
                     this.rClient.addToSet(NobilApplication.geometryLiveSet, cs.uuid);
@@ -139,7 +179,7 @@ class NobilApplication {
                     return cs.uuid;    
                 });
                 
-                return this.rClient.getKeysForKeyArray<string>(keysForChargingStationsWithGeometryAndUpdates).then(csFromDbStringArray => {
+                return this.rClient.getValuesForKeys<string>(keysForChargingStationsWithGeometryAndUpdates).then(csFromDbStringArray => {
                    csFromDbStringArray.map(csJSON => {
                       
                        let cs : ChargerStationDBO = JSON.parse(csJSON);
@@ -149,6 +189,7 @@ class NobilApplication {
                        })[0];
                        
                        let json = this.getUpdatedJSONForChargingStation(cs, liveUpdateCs);
+                       
                        this.rClient.setKey(cs.internationalId, json);
                    });
                    
@@ -180,10 +221,14 @@ class NobilApplication {
                     // Station with no geometry in db
                     resolve(null);
                 }
-                console.log("Updating station with id: " + updateStation.data.uuid);
                 
                 let cs = JSON.parse(jsonString);
                 let json = this.getUpdatedJSONForChargingStation(cs, updateStation.data);
+                
+                // Broadcast
+                if(this.io !== null) {
+                    this.io.emit("status:update", json);
+                }
                 
                 this.rClient.setKey(updateStation.data.uuid, json);
                 resolve(null);

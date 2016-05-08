@@ -13,4 +13,5 @@
 /// <reference path="form-data/form-data.d.ts" />
 /// <reference path="request/request.d.ts" />
 /// <reference path="websocket/websocket.d.ts" />
+/// <reference path="reflux/reflux.d.ts" />
 

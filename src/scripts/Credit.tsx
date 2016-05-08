@@ -11,8 +11,7 @@ class Credit extends React.Component<CreditProps, any> {
     render() {
         return (
             <div className="credit">
-            <div>Created by {this.props.name}, {this.props.year}. <a href={this.props.href}>GitHub</a></div>
-                
+            Created by {this.props.name}, {this.props.year}. <a href={this.props.href}>GitHub</a>
             </div>
             
         );

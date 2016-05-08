@@ -47,6 +47,7 @@ var build = {
             images: [paths.source + 'images/**/*.{jpg,png}'],
             html: paths.source + "**/*.html",
             secrets: paths.source + "secrets.json",
+            svg: paths.source + "**/*.svg",
             data: paths.source + "data/**.json",
         }
     },
@@ -55,6 +56,7 @@ var build = {
             sass: paths.output + "styles",
             html: paths.output,
             scripts: paths.output + "scripts/site.js",
+            svg: paths.output,
             secrets: paths.output,
         },
         dirs: {
@@ -125,6 +127,11 @@ gulp.task("data", function() {
     .pipe(gulp.dest(build.output.dirs.data)); 
 });
 
+gulp.task("svg", function() {
+   return gulp.src(build.input.files.svg)
+    .pipe(gulp.dest(build.output.files.svg)); 
+});
+
 gulp.task("app", ["typescript"], function() {
    
    return browserify({
@@ -138,7 +145,7 @@ gulp.task("app", ["typescript"], function() {
 })
 
 gulp.task("rebuild", function(cb) {
-    runSequence(["clean"], ["html", "app", "sass", "secrets", "data"], cb);
+    runSequence(["clean"], ["html", "app", "sass", "secrets", "data", "svg"], cb);
 })
 
 gulp.task("watch", ["rebuild"], function() {
@@ -147,18 +154,19 @@ gulp.task("watch", ["rebuild"], function() {
    gulp.watch(build.input.files.html, ["html"]);
 });
 
-gulp.task("serve", ["watch"], function() {
-    server.listen( { path: './www/server.js' } );
-});
+// gulp.task("serve", ["watch"], function() {
+//     server.listen( { path: './www/server.js' } );
+// });
 
-gulp.task("livereload", ["serve"], function() {
+gulp.task("livereload", ["watch"], function() {
    browserSync.create();
    
    browserSync.init({
        proxy: {
            target: "http://localhost:8080",
-           //ws: true
-       }
+           ws: true
+       },
+       port: 3002
    });
    
    gulp.watch(build.output.files.html).on("change", browserSync.reload);

@@ -1,16 +1,19 @@
-$primary-color: #0091d2;
+$primary-color: #d6d7d7;
+$blue-tint: #0091d2;
 
+$sidebar-color: lighten($primary-color, 10%);
+$sidebar-color-diff: lighten($sidebar-color, 5%);
 $text-color: #1E1E20;
 $off-white: #F5F5F5;
 
-$border-color: lighten($text-color, 45%);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
 
 * {
     box-sizing: border-box;
 }
 
 body {
-    
+    font-family: "Roboto";
     color: $text-color;
     background-color: $off-white;
 }
@@ -25,37 +28,97 @@ body {
     flex-flow: column;
 }
 
+.box-shadow {
+    box-shadow: 0.1rem 0.1rem 0.3rem darken($blue-tint, 25%);
+}
+
+.border-box {
+    border: 1px solid darken($blue-tint, 25%);
+}
+
 .application-container {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 40rem;
     
-    @extend .flex-column-container;
+    height: 100%;
+    width: 100%;
 }
 
-.map {
-    flex-grow: 4;
-    flex-basis: 24rem;
+.nobil-map {
     position: absolute;
     top: 0;
-    bottom:0;
+    left: 0;
+    right: 0;
+    
+    height: 40rem;
     
     overflow: hidden;
 }
 
+.chargerstation-available {
+    $color: #468966;
+    stroke: $color;
+    stroke-dasharray: 0.2rem;
+    stroke-opacity: 1;
+    fill: lighten($color, 20%);
+    opacity: 1;
+}
+
+.chargerstation-error {
+    $color: #8E2800;
+    stroke: $color;
+    stroke-dasharray: 0.2rem;
+    stroke-opacity: 1;
+    fill: lighten($color, 20%);
+    opacity: 0.7;
+}
+
+.chargerstation-occupied {
+    $color: #FFB03B;
+    stroke: $color;
+    stroke-dasharray: 0.2rem;
+    stroke-opacity: 1;
+    fill: lighten($color, 20%);
+    opacity: 0.7;
+}
+
+.chargerstation-unknown {
+    $color: lighten($text-color, 10%);
+    stroke: $color;
+    stroke-dasharray: 0.2rem;
+    stroke-opacity: 1;
+    fill: lighten($color, 20%);
+    opacity: 1;
+}
+
+.popup-attribute {
+    color: $primary-color;
+    margin-bottom: 0.5rem;
+    .label {
+        color: darken($primary-color, 30%);
+        font-weight: bold;
+    }
+}
+
 .sidebar {
-    flex-grow: 0.5;
-    flex-basis: 24rem;
+    position: absolute;
+    bottom: 0;
+    top: 40rem;
+    left: 0;
+    right: 0;
     
-    padding: 0.5rem 1rem;
+    overflow-y: auto;
     
-    border-top: 1px solid darken($primary-color, 10%);
-    color: $off-white;
-    background-color: $primary-color;
+    padding: 1rem 1rem;
+    
+    border-top: 1px solid darken($primary-color, 30%);
+    background-color: $sidebar-color;
     
     @extend .flex-column-container;
+    
     
     
     > div {
@@ -66,17 +129,18 @@ body {
         margin-top: 0;
     }
     
-    .content {
-        flex-grow: 1;
-    }
 }
 
 .brand {
     
-    height: 6rem;
+    min-height: 6rem;
     padding: 1rem;
     
-    background-color: darken($primary-color, 6%);
+    
+    background-color: $sidebar-color-diff;
+    
+    @extend .box-shadow;
+    @extend .border-box;
     
     @extend .flex-row-container;
     
@@ -85,9 +149,9 @@ body {
         flex-basis: 4rem;
         flex-grow: 0;
         
-        margin-right: 2rem;
+        padding: 1rem;
         
-        border: 1px solid darken($primary-color, 6%);
+        margin-right: 2rem;
     }
     
     .name {
@@ -104,20 +168,97 @@ body {
     
 }
 
-.credit {
-    text-align: center;
-    padding: 1rem;
-    background-color: darken($primary-color, 6%);
-}
-
-@media(min-width: 700px) {
-    
-    .application-container {
-        flex-direction: row;
+.connection-status-display {
+    flex-grow: 1;
+    .title {
+        // None yet
     }
     
+    .description {
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
+.counter {
+    
+    @extend .border-box;
+    background-color: $sidebar-color-diff;
+    
+    @extend .box-shadow;
+    
+    padding: 1rem;
+    margin-bottom: 1rem;
+    
+    display: flex;
+    
+    .label {
+        flex-grow: 2;
+        font-size: 1.2rem;
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .amount {
+        flex-basis: 6rem;
+        font-size: 1.8rem;
+        text-align: center;
+        
+        .red {
+            color: #8E2800;
+        }
+        
+        .yellow {
+            color: #FFB03B;
+        }
+        
+        .green {
+            color: #468966;
+        }
+    }
+}
+
+.credit {
+    width: 90%;
+    margin: -0.5rem auto;
+    min-height: 3rem;
+    text-align: center;
+    padding: 1rem;
+    
+    z-index: 0;
+    
+    @extend .border-box;
+    background-color: $sidebar-color-diff;
+    
+    @extend .box-shadow;
+}
+
+@media (min-width: 650px) {
+    
+    .nobil-map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        right: 24rem;
+        
+        height: 100%;
+    }
+    
+    
     .sidebar {
-        border-left: 1px solid darken($primary-color, 6%);
+        position: absolute;
+        left: auto; 
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 24rem;
+        
+        
+        border-left: 1px solid darken($primary-color, 30%);
         border-top: none;
     }
     

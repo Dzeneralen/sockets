@@ -1,3 +1,17 @@
+export interface ChargerStationDBO {
+    name: string;
+    internationalId: string;
+    city: string;
+    county: string;
+    description: string;
+    address: string;
+    owner: string;
+    status: number;
+    realtime: boolean,
+    geometry: string;
+    connectors?: IConnector[];
+};
+
 export interface IStatusInit {
     type: "status:init";
     data: IChargerStation[]

@@ -66,14 +66,13 @@ class RedisClient {
                     reject(err);
                 }
                 
-                console.log("Redisclient found value ", valueString, "for key", key)
                 resolve(valueString);
             });
         });
         return promise;
     }
     
-    getKeysForKeyArray<T>(keys: string[]) : Promise.IThenable<Array<T>> {
+    getValuesForKeys<T>(keys: string[]) : Promise.IThenable<Array<T>> {
         let promise = new Promise((resolve, reject) => {
             this._client.mget(keys, (err, res) => {
                 if(err) {

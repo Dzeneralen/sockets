@@ -1,4 +1,4 @@
-# Sockets
+# Sockethub
 
 **A showcase application displaying real-time data about the statuses of charging stations for electrical vehichles. [You can find the application here.](http://sockethub.me/)**
 
@@ -10,7 +10,7 @@ The status of available, occupied, errorneous and unknown connetors on the charg
 
 ### Todo
 
-1. Launch website (scheduled by 11.05.2016)
+1. ~~Launch website (scheduled by 11.05.2016)~~
 2. Refactor some rough edges on server-side and order files on client (undetermined)
 
 ---

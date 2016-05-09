@@ -41,7 +41,7 @@ InitializeApplication();
 function InitializeApplication() {
 	let nobilApp = new NobilApplication(Secrets.apiKey);
 
-	let filePath = "C:\\Users\\dzenand\\Documents\\Web\\sockets\\nobil.json";
+	let filePath = __dirname + "\\nobil.json";
 	
 	nobilApp.getDataFileJSON(filePath).then(() => {
 		nobilApp.parseDataFromJSONToDB(filePath).then(() => {

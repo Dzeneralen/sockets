@@ -22,6 +22,7 @@ class Map extends React.Component<any, any> {
     }
 
     onUpdates(list: Array<INSocket.ChargerStationDBO>) {
+        debugger;
         let markers = list.map(cs => {
 
             let m = L.circleMarker(JSON.parse(cs.geometry), this.getStyle(cs));
@@ -37,7 +38,7 @@ class Map extends React.Component<any, any> {
             this.chargerStationLayer.addLayer(m);
         });
 
-        if (this.initialized === false) {
+        if (this.initialized === false && this.map !== null) {
             this.initialized = true;
             let bbox = this.chargerStationLayer.getBounds();
             this.map.fitBounds(bbox);
@@ -153,7 +154,9 @@ class Map extends React.Component<any, any> {
 
             this.chargerStationLayer = L.featureGroup();
             this.chargerStationLayer.addTo(map);
+            this.map.fitWorld();
 
+            Store.Instance.subscribe(this.onUpdates.bind(this));
 
             this.map.on("moveend", () => {
                 let bbox = this.map.getBounds();
@@ -164,10 +167,6 @@ class Map extends React.Component<any, any> {
                     ymax: bbox.getEast(),
                 });
             });
-
-            setTimeout(() => {
-                Store.Instance.subscribe(this.onUpdates.bind(this));
-            }, 300);
 
         }, 100);
 

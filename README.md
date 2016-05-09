@@ -1,6 +1,6 @@
 # Sockets
 
-**A showcase application displaying real-time data about the statuses of charging stations for electrical vehichles.**
+**A showcase application displaying real-time data about the statuses of charging stations for electrical vehichles. [Link to the application](http://46.101.182.119/)**
 
 Uses real-time data from the API provided by [NOBIL](http://info.nobil.no/) as the source of data, and shows users the status of all charging stations in Norway which send real-time data.
 

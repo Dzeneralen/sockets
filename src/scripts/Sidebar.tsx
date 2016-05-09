@@ -14,7 +14,7 @@ class Sidebar extends React.Component<any, any> {
         return (
             <div className="sidebar">
                 <Brand 
-                    name="Sockets" 
+                    name="Sockethub" 
                     logoAlt="Image" 
                     logoUrl="icon.svg"
                 />

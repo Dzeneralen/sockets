@@ -22,7 +22,6 @@ class Map extends React.Component<any, any> {
     }
 
     onUpdates(list: Array<INSocket.ChargerStationDBO>) {
-        debugger;
         let markers = list.map(cs => {
 
             let m = L.circleMarker(JSON.parse(cs.geometry), this.getStyle(cs));

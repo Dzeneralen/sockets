@@ -37,7 +37,7 @@ class Map extends React.Component<any, any> {
             this.chargerStationLayer.addLayer(m);
         });
 
-        if (this.initialized === false && this.map !== null) {
+        if (this.initialized === false && this.map !== null && list.length > 0) {
             this.initialized = true;
             let bbox = this.chargerStationLayer.getBounds();
             this.map.fitBounds(bbox);

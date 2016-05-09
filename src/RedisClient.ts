@@ -13,7 +13,7 @@ class RedisClient {
     private _host: string;
     private _port: number;
     
-    constructor({ host = "127.0.0.1", port = 6379 } : ClientParameters) {
+    constructor({ host = "localhost", port = 6379 } : ClientParameters) {
         this._client = null;
         this._isConnected = false;
         this._host;

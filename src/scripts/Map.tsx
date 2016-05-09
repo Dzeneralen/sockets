@@ -141,7 +141,7 @@ class Map extends React.Component<any, any> {
                 minZoom: 2,
                 maxZoom: 18,
                 layers: [
-                    L.tileLayer("http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png", {
+                    L.tileLayer("http://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png", {
                         attribution: attribution
                     })
                 ],

@@ -133,7 +133,7 @@ class Map extends React.Component<any, any> {
         let node = ReactDOM.findDOMNode<HTMLElement>(this);
         node.className = "nobil-map";
 
-        let attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>. Data from <a href="http://info.nobil.no/">NOBIL</a>';
+        let attribution = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>. Data from <a href="http://info.nobil.no/">NOBIL</a>';
 
 
         setTimeout(() => {

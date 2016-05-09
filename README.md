@@ -1,6 +1,6 @@
 # Sockethub
 
-**A showcase application displaying real-time data about the statuses of charging stations for electrical vehichles. [You can find the application here.](http://sockethub.me/)**
+**A showcase application displaying real-time data about the statuses of charging stations for electrical vehicles. [You can find the application here.](http://sockethub.me/)**
 
 Uses real-time data from the API provided by [NOBIL](http://info.nobil.no/) as the source of data, and shows users the status of all charging stations in Norway which send real-time data.
 

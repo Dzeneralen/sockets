@@ -107,12 +107,12 @@ class Map extends React.Component<any, any> {
         if (stats.available > 0) {
             cssClass = "chargerstation-available";
         } else {
-            if (stats.total === stats.unknown) {
-                cssClass = "chargerstation-unknown";
+            if((stats.occupied > 0) && (stats.available === 0)) {
+                cssClass = "chargerstation-occupied";                
             } else if (stats.total === stats.error) {
                 cssClass = "chargerstation-error";
             } else {
-                cssClass = "chargerstation-occupied";
+                cssClass = "chargerstation-unknown";
             }
         }
         let options: L.PathOptions = {

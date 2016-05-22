@@ -7,7 +7,7 @@ import * as WebSocket from "websocket";
 
 import * as INSocket from "./NobilSocketInterfaces";
 import NobilApplication from "./NobilApplication";
-let Secrets =  require("./secrets.json");
+let Secrets =  require("../secrets.json");
 
 
 

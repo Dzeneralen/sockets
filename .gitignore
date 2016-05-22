@@ -6,4 +6,4 @@ bower_packages
 www
 
 # Secrets
-src/secrets.json
+secrets.json

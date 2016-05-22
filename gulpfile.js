@@ -46,7 +46,6 @@ var build = {
             // Miscellaneous files to copy
             images: [paths.source + 'images/**/*.{jpg,png}'],
             html: paths.source + "**/*.html",
-            secrets: paths.source + "secrets.json",
             svg: paths.source + "**/*.svg",
             data: paths.source + "data/**.json",
         }
@@ -56,8 +55,7 @@ var build = {
             sass: paths.output + "styles",
             html: paths.output,
             scripts: paths.output + "scripts/site.js",
-            svg: paths.output,
-            secrets: paths.output,
+            svg: paths.output
         },
         dirs: {
             ts: paths.output,
@@ -117,10 +115,6 @@ gulp.task("html", function() {
         .on("change", browserSync.reload);
 });
 
-gulp.task("secrets", function() {
-   return gulp.src(build.input.files.secrets)
-    .pipe(gulp.dest(build.output.files.secrets)); 
-});
 
 gulp.task("data", function() {
    return gulp.src(build.input.files.data)
@@ -145,7 +139,7 @@ gulp.task("app", ["typescript"], function() {
 })
 
 gulp.task("rebuild", function(cb) {
-    runSequence(["clean"], ["html", "app", "sass", "secrets", "data", "svg"], cb);
+    runSequence(["clean"], ["html", "app", "sass", "data", "svg"], cb);
 })
 
 gulp.task("watch", ["rebuild"], function() {
